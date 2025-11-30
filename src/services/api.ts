@@ -36,11 +36,9 @@ apiClient.interceptors.response.use(
       error.response?.status === 401 &&
       error.config?.headers?.Authorization
     ) {
-      // Token expired or invalid
-      localStorage.removeItem("token");
-      localStorage.removeItem("username");
-      localStorage.removeItem("role");
-      window.location.href = "/login";
+      // Token hết hạn hoặc không hợp lệ: KHÔNG tự đăng xuất/redirect.
+      // Trả lỗi về cho tầng UI xử lý (hiển thị thông báo và giữ nguyên trang).
+      // Nếu muốn tự đăng xuất, có thể thực hiện ở từng màn hình theo nhu cầu.
     }
     return Promise.reject(error);
   }

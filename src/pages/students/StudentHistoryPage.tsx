@@ -73,15 +73,20 @@ const StudentHistoryPage: React.FC = () => {
         ) : (
           <Table
             headers={[
+              "ID đăng ký",
               "Mã khóa học",
               "Nội dung",
               "Ngày đăng ký",
               "Thời gian học",
               "Trạng thái",
+              "Chi tiết",
             ]}
           >
             {history.map((item) => (
               <tr key={item.enrollmentId} className="hover:bg-gray-50">
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  {item.enrollmentId}
+                </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                   {item.courseCode}
                 </td>
@@ -103,6 +108,14 @@ const StudentHistoryPage: React.FC = () => {
                   >
                     {getStatusDisplay(item.status)}
                   </span>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm">
+                  <Link
+                    to={`/courses/${item.courseId}/${item.enrollmentId}/detail`}
+                    className="text-primary-600 hover:text-primary-800 font-medium"
+                  >
+                    Xem chương →
+                  </Link>
                 </td>
               </tr>
             ))}

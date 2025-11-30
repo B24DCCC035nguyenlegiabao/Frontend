@@ -12,6 +12,7 @@ import StudentFormPage from "./pages/students/StudentFormPage";
 import StudentHistoryPage from "./pages/students/StudentHistoryPage";
 import CoursesPage from "./pages/courses/CoursesPage";
 import CourseFormPage from "./pages/courses/CourseFormPage";
+import CourseDetailPage from "./pages/courses/CourseDetailPage";
 import EnrollmentPage from "./pages/enrollments/EnrollmentPage";
 import CertificatesPage from "./pages/certificates/CertificatesPage";
 import StatisticsPage from "./pages/statistics/StatisticsPage";
@@ -106,22 +107,30 @@ const App: React.FC = () => {
             </ProtectedRoute>
           }
         />
+        <Route
+          path="/courses/:courseId/:enrollmentId/detail"
+          element={
+            <ProtectedRoute>
+              <CourseDetailPage />
+            </ProtectedRoute>
+          }
+        />
 
         {/* Enrollment route */}
         <Route
           path="/enrollments"
           element={
-            <ProtectedRoute>
+            <ProtectedRoute requireUserOnly>
               <EnrollmentPage />
             </ProtectedRoute>
           }
         />
 
-        {/* Certificates route (Admin/Staff only) */}
+        {/* Certificates route (Admin only) */}
         <Route
           path="/certificates"
           element={
-            <ProtectedRoute requireAdminOrStaff>
+            <ProtectedRoute requireAdmin>
               <CertificatesPage />
             </ProtectedRoute>
           }

@@ -5,7 +5,7 @@ import Card from "../../components/common/Card";
 import Button from "../../components/common/Button";
 import Table from "../../components/common/Table";
 import LoadingSpinner from "../../components/common/LoadingSpinner";
-import { courseService } from "../../services";
+import { courseService, enrollmentService } from "../../services";
 import type { CourseDTO } from "../../types";
 import { formatDateTime } from "../../utils/dateUtils";
 import { isAdmin } from "../../utils/roleUtils";
@@ -39,10 +39,54 @@ const CoursesPage: React.FC = () => {
     }
 
     try {
-      await courseService.delete(id);
+      // Kiểm tra trước khi xóa: nếu có học sinh đăng ký khóa này thì chặn xóa và thông báo
+      try {
+        const enrollmentsRes = await enrollmentService.getAll();
+        const hasEnrollments =
+          Array.isArray(enrollmentsRes?.data) &&
+          enrollmentsRes.data.some((e: any) => e?.courseId === id);
+        if (hasEnrollments) {
+          alert(
+            "Khóa Học này đang có học sinh đăng kí vui lòng thực hiện chức năng này sau"
+          );
+          return;
+        }
+      } catch (preErr) {
+        // Nếu bước kiểm tra thất bại, vẫn thử gọi xóa và dựa vào phản hồi từ server
+      }
+
+      const response = await courseService.delete(id);
+      if (response?.status === 401) {
+        // Không tự đăng xuất, hiển thị thông báo thân thiện và giữ nguyên trang
+        alert(
+          "Khóa Học này đang có học sinh đăng kí vui lòng thực hiện chức năng này sau"
+        );
+        return;
+      }
+      if (response?.status === 409) {
+        alert(
+          response?.data?.message ||
+            "Khóa Học này đang có học sinh đăng kí vui lòng thực hiện chức năng này sau"
+        );
+        return;
+      }
       await loadCourses();
-    } catch (err) {
-      alert(getErrorMessage(err));
+    } catch (err: any) {
+      const status = err?.response?.status;
+      const data = err?.response?.data;
+      if (status === 401) {
+        // Không tự đăng xuất, hiển thị thông báo thân thiện và giữ nguyên trang
+        alert(
+          "Khóa Học này đang có học sinh đăng kí vui lòng thực hiện chức năng này sau"
+        );
+      } else if (status === 409) {
+        alert(
+          data?.message ||
+            "Khóa Học này đang có học sinh đăng kí vui lòng thực hiện chức năng này sau"
+        );
+      } else {
+        alert(getErrorMessage(err));
+      }
     }
   };
 

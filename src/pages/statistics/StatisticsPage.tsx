@@ -102,7 +102,7 @@ const StatisticsPage: React.FC = () => {
         </Card>
 
         {/* Year Statistics */}
-        <Card title="Thống kê khóa học theo năm">
+        <Card title="Thống kê khóa học đã đăng kí theo năm">
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Chọn năm
@@ -123,15 +123,31 @@ const StatisticsPage: React.FC = () => {
           {yearStats && (
             <div className="space-y-4">
               <div className="flex justify-between items-center py-3 bg-gray-50 px-4 rounded-lg">
-                <span className="text-gray-600">Tổng số khóa học</span>
+                <span className="text-gray-600">Số khóa học</span>
                 <span className="text-2xl font-bold text-gray-900">
                   {yearStats.totalCourses}
                 </span>
               </div>
               <div className="flex justify-between items-center py-3 bg-gray-50 px-4 rounded-lg">
-                <span className="text-gray-600">Tổng số học viên</span>
+                <span className="text-gray-600">Số học viên đã đăng kí</span>
                 <span className="text-2xl font-bold text-gray-900">
                   {yearStats.totalStudentsEnrolled}
+                </span>
+              </div>
+              <div className="flex justify-between items-center py-3 bg-yellow-50 px-4 rounded-lg">
+                <span className="text-yellow-700 font-medium">
+                  Đã hoàn Thành chờ xử lí
+                </span>
+                <span className="text-2xl font-bold text-yellow-800">
+                  {yearStats.totalPending ?? 0}
+                </span>
+              </div>
+              <div className="flex justify-between items-center py-3 bg-blue-50 px-4 rounded-lg">
+                <span className="text-blue-700 font-medium">
+                  Chưa Hoàn Thành
+                </span>
+                <span className="text-2xl font-bold text-blue-800">
+                  {yearStats.totalInProgress ?? 0}
                 </span>
               </div>
               <div className="flex justify-between items-center py-3 bg-green-50 px-4 rounded-lg">

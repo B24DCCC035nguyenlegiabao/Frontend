@@ -21,11 +21,15 @@ const Navbar: React.FC = () => {
   }
 
   return (
-    <nav className="bg-primary-600 text-white shadow-lg">
-      <div className="container mx-auto px-4">
+    <nav className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white shadow-2xl relative overflow-hidden">
+      <div className="absolute inset-0 bg-white opacity-5"></div>
+      <div className="container mx-auto px-4 relative z-10">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link to="/dashboard" className="flex items-center space-x-2">
+          <Link
+            to="/dashboard"
+            className="flex items-center space-x-2 hover:scale-105 transition-transform duration-200"
+          >
             <svg
               className="w-8 h-8"
               fill="none"
@@ -46,39 +50,41 @@ const Navbar: React.FC = () => {
           <div className="hidden md:flex items-center space-x-6">
             <Link
               to="/dashboard"
-              className="hover:bg-primary-700 px-3 py-2 rounded-md transition-colors"
+              className="hover:bg-white/20 px-4 py-2 rounded-lg transition-all duration-200 hover:shadow-lg font-medium"
             >
-              Tổng quan
+              Trang chủ
             </Link>
             <Link
               to="/students"
-              className="hover:bg-primary-700 px-3 py-2 rounded-md transition-colors"
+              className="hover:bg-white/20 px-4 py-2 rounded-lg transition-all duration-200 hover:shadow-lg font-medium"
             >
               Học viên
             </Link>
             <Link
               to="/courses"
-              className="hover:bg-primary-700 px-3 py-2 rounded-md transition-colors"
+              className="hover:bg-white/20 px-4 py-2 rounded-lg transition-all duration-200 hover:shadow-lg font-medium"
             >
               Khóa học
             </Link>
-            <Link
-              to="/enrollments"
-              className="hover:bg-primary-700 px-3 py-2 rounded-md transition-colors"
-            >
-              Đăng ký học
-            </Link>
+            {!isAdmin(role) && (
+              <Link
+                to="/enrollments"
+                className="hover:bg-white/20 px-4 py-2 rounded-lg transition-all duration-200 hover:shadow-lg font-medium"
+              >
+                Đăng ký học
+              </Link>
+            )}
             {isAdmin(role) && (
               <Link
                 to="/certificates"
-                className="hover:bg-primary-700 px-3 py-2 rounded-md transition-colors"
+                className="hover:bg-white/20 px-4 py-2 rounded-lg transition-all duration-200 hover:shadow-lg font-medium"
               >
                 Cấp chứng chỉ
               </Link>
             )}
             <Link
               to="/statistics"
-              className="hover:bg-primary-700 px-3 py-2 rounded-md transition-colors"
+              className="hover:bg-white/20 px-4 py-2 rounded-lg transition-all duration-200 hover:shadow-lg font-medium"
             >
               Thống kê
             </Link>
@@ -94,9 +100,22 @@ const Navbar: React.FC = () => {
             </div>
             <button
               onClick={handleLogout}
-              className="bg-primary-700 hover:bg-primary-800 px-4 py-2 rounded-md transition-colors"
+              className="bg-white/20 hover:bg-white/30 px-4 py-2 rounded-lg transition-all duration-200 hover:shadow-lg font-medium flex items-center space-x-2 backdrop-blur-sm"
             >
-              Đăng xuất
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                />
+              </svg>
+              <span>Đăng xuất</span>
             </button>
           </div>
         </div>

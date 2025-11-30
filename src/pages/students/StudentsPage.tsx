@@ -6,7 +6,7 @@ import Button from "../../components/common/Button";
 import Table from "../../components/common/Table";
 import LoadingSpinner from "../../components/common/LoadingSpinner";
 import Input from "../../components/common/Input";
-import { studentService } from "../../services";
+import { studentService, enrollmentService } from "../../services";
 import type { StudentDTO } from "../../types";
 import { formatDate } from "../../utils/dateUtils";
 import { isAdmin } from "../../utils/roleUtils";
@@ -59,10 +59,54 @@ const StudentsPage: React.FC = () => {
     }
 
     try {
-      await studentService.delete(id);
+      // Kiểm tra trước khi xóa: nếu sinh viên có đăng ký khóa học chưa hoàn thành thì chặn xóa
+      try {
+        const enrollmentsRes = await enrollmentService.getAll();
+        const hasIncompleteEnrollments =
+          Array.isArray(enrollmentsRes?.data) &&
+          enrollmentsRes.data.some(
+            (e: any) => e?.studentId === id && e?.certificateStatus !== "PASS"
+          );
+        if (hasIncompleteEnrollments) {
+          alert(
+            "Sinh viên này đang có khóa học chưa hoàn thành vui lòng thực hiện chức năng này sau"
+          );
+          return;
+        }
+      } catch (preErr) {
+        // Nếu bước kiểm tra thất bại, vẫn thử gọi xóa và dựa vào phản hồi từ server
+      }
+
+      const response = await studentService.delete(id);
+      if (response?.status === 401) {
+        alert(
+          "Sinh viên này đang có khóa học chưa hoàn thành vui lòng thực hiện chức năng này sau"
+        );
+        return;
+      }
+      if (response?.status === 409) {
+        alert(
+          response?.data?.message ||
+            "Sinh viên này đang có khóa học chưa hoàn thành vui lòng thực hiện chức năng này sau"
+        );
+        return;
+      }
       await loadStudents();
-    } catch (err) {
-      alert(getErrorMessage(err));
+    } catch (err: any) {
+      const status = err?.response?.status;
+      const data = err?.response?.data;
+      if (status === 401) {
+        alert(
+          "Sinh viên này đang có khóa học chưa hoàn thành vui lòng thực hiện chức năng này sau"
+        );
+      } else if (status === 409) {
+        alert(
+          data?.message ||
+            "Sinh viên này đang có khóa học chưa hoàn thành vui lòng thực hiện chức năng này sau"
+        );
+      } else {
+        alert(getErrorMessage(err));
+      }
     }
   };
 

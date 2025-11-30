@@ -1,6 +1,7 @@
 // ============ Enums ============
 export const CertificateStatus = {
   PENDING: "PENDING",
+  IN_PROGRESS: "IN_PROGRESS",
   PASS: "PASS",
   FAIL: "FAIL",
 } as const;
@@ -10,7 +11,6 @@ export type CertificateStatus =
 
 export const UserRole = {
   ADMIN: "ROLE_ADMIN",
-  STAFF: "ROLE_STAFF",
   USER: "ROLE_USER",
 } as const;
 
@@ -79,6 +79,32 @@ export interface UpdateCourseRequest {
   content?: string;
 }
 
+// ============ Chapter DTOs ============
+export interface ChapterDTO {
+  id: number;
+  number: number;
+  title: string;
+  content: string;
+}
+
+export interface CreateChaptersRequest {
+  courseId: number;
+  chapterCount: number;
+}
+
+export interface ChapterCompletionRequest {
+  enrollmentId: number;
+  chapterId: number;
+}
+
+export interface ChapterProgressDTO {
+  chapterId: number;
+  number: number;
+  title: string;
+  completed: boolean;
+  completedAt?: string; // ISO datetime
+}
+
 // ============ Enrollment DTOs ============
 export interface EnrollmentDTO {
   id: number;
@@ -101,6 +127,7 @@ export interface IssueCertificateRequest {
 
 export interface EnrollmentHistoryDTO {
   enrollmentId: number;
+  courseId: number;
   courseCode: string;
   courseContent: string;
   enrollmentDate: string;
@@ -114,6 +141,8 @@ export interface CourseStatsDTO {
   year: number;
   totalCourses: number;
   totalStudentsEnrolled: number;
+  totalPending: number;
+  totalInProgress: number;
   totalPass: number;
   totalFail: number;
 }

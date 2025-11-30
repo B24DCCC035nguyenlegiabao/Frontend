@@ -5,11 +5,13 @@ import LoadingSpinner from "../../components/common/LoadingSpinner";
 import { statisticsService } from "../../services";
 import type { DashboardSummaryDTO } from "../../types";
 import { getErrorMessage } from "../../utils/helpers";
+import { useAppSelector } from "../../redux/hooks";
 
 const DashboardPage: React.FC = () => {
   const [summary, setSummary] = useState<DashboardSummaryDTO | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const { role } = useAppSelector((state) => state.auth);
 
   useEffect(() => {
     loadDashboard();
@@ -44,17 +46,36 @@ const DashboardPage: React.FC = () => {
 
   return (
     <Layout>
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">Tổng quan hệ thống</h1>
-        <p className="text-gray-600 mt-2">
-          Thống kê tổng quan về hoạt động trung tâm
-        </p>
+      <div className="mb-8 animate-fade-in">
+        <div className="flex items-center space-x-3 mb-3">
+          <div className="p-3 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl shadow-lg">
+            <svg
+              className="w-8 h-8 text-white"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
+              />
+            </svg>
+          </div>
+          <div>
+            <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+              Trang chủ hệ thống
+            </h1>
+            <p className="text-gray-600 mt-1">Chào mừng bạn quay trở lại!</p>
+          </div>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <Card>
+        <Card className="hover:shadow-xl transition-all duration-300 transform hover:scale-105 animate-slide-up">
           <div className="flex items-center">
-            <div className="flex-shrink-0 bg-primary-100 rounded-lg p-3">
+            <div className="flex-shrink-0 bg-gradient-to-br from-blue-400 to-blue-600 rounded-xl p-3 shadow-lg">
               <svg
                 className="w-8 h-8 text-primary-600"
                 fill="none"
@@ -78,9 +99,12 @@ const DashboardPage: React.FC = () => {
           </div>
         </Card>
 
-        <Card>
+        <Card
+          className="hover:shadow-xl transition-all duration-300 transform hover:scale-105 animate-slide-up"
+          style={{ animationDelay: "0.1s" }}
+        >
           <div className="flex items-center">
-            <div className="flex-shrink-0 bg-green-100 rounded-lg p-3">
+            <div className="flex-shrink-0 bg-gradient-to-br from-green-400 to-emerald-600 rounded-xl p-3 shadow-lg">
               <svg
                 className="w-8 h-8 text-green-600"
                 fill="none"
@@ -104,9 +128,12 @@ const DashboardPage: React.FC = () => {
           </div>
         </Card>
 
-        <Card>
+        <Card
+          className="hover:shadow-xl transition-all duration-300 transform hover:scale-105 animate-slide-up"
+          style={{ animationDelay: "0.2s" }}
+        >
           <div className="flex items-center">
-            <div className="flex-shrink-0 bg-blue-100 rounded-lg p-3">
+            <div className="flex-shrink-0 bg-gradient-to-br from-cyan-400 to-blue-600 rounded-xl p-3 shadow-lg">
               <svg
                 className="w-8 h-8 text-blue-600"
                 fill="none"
@@ -130,9 +157,12 @@ const DashboardPage: React.FC = () => {
           </div>
         </Card>
 
-        <Card>
+        <Card
+          className="hover:shadow-xl transition-all duration-300 transform hover:scale-105 animate-slide-up"
+          style={{ animationDelay: "0.3s" }}
+        >
           <div className="flex items-center">
-            <div className="flex-shrink-0 bg-yellow-100 rounded-lg p-3">
+            <div className="flex-shrink-0 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-xl p-3 shadow-lg">
               <svg
                 className="w-8 h-8 text-yellow-600"
                 fill="none"
@@ -221,6 +251,27 @@ const DashboardPage: React.FC = () => {
               </svg>
               <span className="font-medium">Quản lý khóa học</span>
             </a>
+            {role !== "ROLE_ADMIN" && (
+              <a
+                href="/enrollments"
+                className="flex items-center p-3 bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors"
+              >
+                <svg
+                  className="w-5 h-5 text-primary-600 mr-3"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                  />
+                </svg>
+                <span className="font-medium">Đăng ký học</span>
+              </a>
+            )}
             <a
               href="/statistics"
               className="flex items-center p-3 bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors"
@@ -243,6 +294,22 @@ const DashboardPage: React.FC = () => {
           </div>
         </Card>
       </div>
+      <style>{`
+        @keyframes fade-in {
+          from { opacity: 0; transform: translateY(-10px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes slide-up {
+          from { opacity: 0; transform: translateY(20px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+          animation: fade-in 0.6s ease-out;
+        }
+        .animate-slide-up {
+          animation: slide-up 0.6s ease-out;
+        }
+      `}</style>
     </Layout>
   );
 };

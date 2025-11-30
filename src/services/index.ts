@@ -15,6 +15,10 @@ import type {
   CourseStatsDTO,
   DashboardSummaryDTO,
   ProvinceStats,
+  ChapterDTO,
+  CreateChaptersRequest,
+  ChapterCompletionRequest,
+  ChapterProgressDTO,
 } from "../types";
 
 // ============ Auth Service ============
@@ -101,6 +105,11 @@ export const courseService = {
 
 // ============ Enrollment Service ============
 export const enrollmentService = {
+  getAll: async (): Promise<EnrollmentDTO[]> => {
+    const response = await apiClient.get<EnrollmentDTO[]>("/v1/enrollments");
+    return response.data;
+  },
+
   enroll: async (data: EnrollRequest): Promise<EnrollmentDTO> => {
     const response = await apiClient.post<EnrollmentDTO>(
       "/v1/enrollments",
@@ -115,6 +124,42 @@ export const enrollmentService = {
   ): Promise<EnrollmentDTO> => {
     const response = await apiClient.put<EnrollmentDTO>(
       `/v1/enrollments/${enrollmentId}/certificate`,
+      data
+    );
+    return response.data;
+  },
+
+  completeChapter: async (data: ChapterCompletionRequest): Promise<void> => {
+    await apiClient.post("/v1/enrollments/complete-chapter", data);
+  },
+
+  getProgress: async (enrollmentId: number): Promise<ChapterProgressDTO[]> => {
+    const response = await apiClient.get<ChapterProgressDTO[]>(
+      `/v1/enrollments/${enrollmentId}/progress`
+    );
+    return response.data;
+  },
+};
+
+// ============ Chapter Service ============
+export const chapterService = {
+  createChapters: async (
+    data: CreateChaptersRequest
+  ): Promise<ChapterDTO[]> => {
+    const response = await apiClient.post<ChapterDTO[]>("/v1/chapters", data);
+    return response.data;
+  },
+
+  getByCourse: async (courseId: number): Promise<ChapterDTO[]> => {
+    const response = await apiClient.get<ChapterDTO[]>(
+      `/v1/chapters/course/${courseId}`
+    );
+    return response.data;
+  },
+
+  update: async (chapterId: number, data: ChapterDTO): Promise<ChapterDTO> => {
+    const response = await apiClient.put<ChapterDTO>(
+      `/v1/chapters/${chapterId}`,
       data
     );
     return response.data;

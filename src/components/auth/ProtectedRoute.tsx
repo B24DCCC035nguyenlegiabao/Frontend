@@ -6,13 +6,13 @@ import { useAppSelector } from "../../redux/hooks";
 interface ProtectedRouteProps {
   children: ReactNode;
   requireAdmin?: boolean;
-  requireAdminOrStaff?: boolean;
+  requireUserOnly?: boolean;
 }
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   children,
   requireAdmin = false,
-  requireAdminOrStaff = false,
+  requireUserOnly = false,
 }) => {
   const { isAuthenticated, role } = useAppSelector((state) => state.auth);
 
@@ -24,7 +24,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     return <Navigate to="/dashboard" replace />;
   }
 
-  if (requireAdminOrStaff && role !== "ROLE_ADMIN" && role !== "ROLE_STAFF") {
+  if (requireUserOnly && role !== "ROLE_USER") {
     return <Navigate to="/dashboard" replace />;
   }
 
