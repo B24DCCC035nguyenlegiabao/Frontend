@@ -37,7 +37,7 @@ const CourseDetailPage: React.FC = () => {
       setLoading(true);
       setError("");
 
-      let actualCourseId = courseId ? parseInt(courseId) : null;
+      let actualCourseId = courseId ? parseInt(courseId, 10) : null;
 
       // Nếu không có courseId nhưng có enrollmentId, lấy từ enrollment
       if (!actualCourseId && enrollmentId) {
@@ -75,7 +75,7 @@ const CourseDetailPage: React.FC = () => {
           // Nếu lỗi, thử lấy danh sách chương thông thường
           try {
             const chaptersData = await chapterService.getByCourse(
-              parseInt(courseId)
+              actualCourseId
             );
             setChapters(
               chaptersData.map((ch) => ({
@@ -93,9 +93,7 @@ const CourseDetailPage: React.FC = () => {
       } else {
         // Nếu không có enrollmentId (admin xem), chỉ lấy danh sách chương
         try {
-          const chaptersData = await chapterService.getByCourse(
-            parseInt(courseId)
-          );
+          const chaptersData = await chapterService.getByCourse(actualCourseId);
           setChapters(
             chaptersData.map((ch) => ({
               chapterId: ch.id,
